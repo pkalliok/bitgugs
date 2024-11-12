@@ -56,6 +56,9 @@ def create_issue(args):
         f.write(f"id: {identifier}\ntitle: {title}\nstatus: created\n")
         f.write("description: \n")
     os.system("${EDITOR:-sensible-editor} +4 " + f"'{issue_filename}'")
+    if args.commit:
+        os.system(f"git add '{issue_filename}'")
+        os.system(f"git commit -m '{identifier}: {title} (created)'")
 
 def issue_lines_no_meta(issue_filename):
     last_field = None
@@ -105,6 +108,10 @@ cmd_parser = ArgumentParser(
         prog="bitgugs",
         description="Git-based issue tracker",
 )
+cmd_parser.add_argument("-c", "--commit",
+        action="store_true",
+        help="Commit issue changes immediately",
+)
 subcommands = cmd_parser.add_subparsers(dest="subcommand", required=True)
 
 newissue_parser = subcommands.add_parser("new", help="Create new issue")
@@ -136,5 +143,12 @@ listissues_parser.add_argument("-q", "--quiet",
 if __name__ == "__main__":
     args = cmd_parser.parse_args()
     if not args.subcommand: cmd_parser.print_help()
+    elif args.commit:
+        if os.system("git stash -m 'bitgugs stash for --commit'") != 0:
+            die("git stash was unsuccessful but needed for --commit")
+        try:
+            args.func(args)
+        finally:
+            os.system("git stash pop")
     else: args.func(args)
 
