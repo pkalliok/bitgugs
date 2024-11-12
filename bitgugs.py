@@ -73,6 +73,15 @@ def commit_to_issue(args):
     if args.status: commit_message += f" ({args.status})"
     os.system(f"git commit -m '{commit_message}'")
 
+def update_issue(args):
+    issue_filename = get_issue_filename(args.id)
+    value = " ".join(args.value)
+    with open(issue_filename, "at") as f:
+        f.write(f"{args.field}: {value}\n")
+    if args.commit:
+        os.system(f"git add '{issue_filename}'")
+        os.system(f"git commit -m '{args.id}: {args.field} -> {value}'")
+
 def issue_lines_no_meta(issue_filename):
     last_field = None
     last_field_value = ""
@@ -167,6 +176,21 @@ commit_parser.add_argument("message",
 commit_parser.add_argument("-s", "--status",
         type=str,
         help="Also change issue status when commiting",
+)
+
+update_parser = subcommands.add_parser("update", help="Update an issue")
+update_parser.set_defaults(func=update_issue)
+update_parser.add_argument("id",
+        type=str,
+        help="Identifier for the issue you are making the changes to",
+)
+update_parser.add_argument("field",
+        type=str,
+        help="Which field (title, status, description, links...) to update",
+)
+update_parser.add_argument("value",
+        type=str, nargs="+",
+        help="New value for the field",
 )
 
 if __name__ == "__main__":

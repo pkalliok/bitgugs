@@ -3,3 +3,5 @@ title: subcommand for update
 status: created
 description: A command one can use to update issues
 status: open
+commit: initial implementation of update command
+status: closed
