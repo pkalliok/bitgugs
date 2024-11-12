@@ -25,3 +25,9 @@ following features:
   email gateway, or anything of the like.  Bitgugs' point is to be
   simple and transparent.  Further integrations can be built on Bitgugs'
   data model.
+
+- no fiddling with branches: Some Git based issue trackers use their own
+  branches to have a virtual "filesystem" where they can arrange things
+  as they want.  As Bitgugs' point is to have the issues describe
+  accurately what's up with a particular version of the code, the issues
+  use the same branching as does the code.
