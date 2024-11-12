@@ -63,13 +63,16 @@ def create_issue(args):
 def commit_to_issue(args):
     if args.commit:
         die("The --commit switch doesn't make sense for the commit command")
-    issue_filename = get_issue_filename(args.id)
     message = " ".join(args.message)
-    with open(issue_filename, "at") as f:
-        f.write(f"commit: {message}\n")
-        if args.status: f.write(f"status: {args.status}\n")
-    os.system(f"git add '{issue_filename}'")
-    commit_message = f"{args.id}: {message}"
+    issue_ids = [args.id] + (args.issues or [])
+    for issue_id in issue_ids:
+        issue_filename = get_issue_filename(issue_id)
+        with open(issue_filename, "at") as f:
+            f.write(f"commit: {message}\n")
+            if args.status: f.write(f"status: {args.status}\n")
+        os.system(f"git add '{issue_filename}'")
+    message_id = ", ".join(issue_ids)
+    commit_message = f"{message_id}: {message}"
     if args.status: commit_message += f" ({args.status})"
     os.system(f"git commit -m '{commit_message}'")
 
@@ -179,6 +182,9 @@ commit_parser.add_argument("message",
 commit_parser.add_argument("-s", "--status",
         type=str,
         help="Also change issue status when commiting",
+)
+commit_parser.add_argument("-i", "--issues", nargs="+",
+        help="Identifier(s) for more issue(s) that the changes belong to",
 )
 
 update_parser = subcommands.add_parser("update", help="Update an issue")
