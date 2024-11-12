@@ -1,0 +1,4 @@
+id: 1008
+title: add commit flag
+status: created
+description: Make a --commit flag for committing issue changes immediately
