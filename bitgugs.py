@@ -16,6 +16,10 @@ def result(command):
     print("?>>", command)
     return os.popen(command).readline().rstrip()
 
+def commit_with_message(message, filename=None):
+    if filename: run(f"git add '{filename}'")
+    run(f"git commit -m '{message}'")
+
 def find_git_root():
     return result("git rev-parse --show-toplevel")
 
@@ -65,8 +69,8 @@ def create_issue(args):
         f.write("description: \n")
     run("${EDITOR:-sensible-editor} +4 " + f"'{issue_filename}'")
     if args.commit:
-        run(f"git add '{issue_filename}'")
-        run(f"git commit -m '{identifier}: {title} ({args.status})'")
+        commit_with_message(f"{identifier}: {title} ({args.status})",
+                filename=issue_filename)
 
 def commit_to_issue(args):
     if args.commit:
@@ -82,7 +86,7 @@ def commit_to_issue(args):
     message_id = ", ".join(issue_ids)
     commit_message = f"{message_id}: {message}"
     if args.status: commit_message += f" ({args.status})"
-    run(f"git commit -m '{commit_message}'")
+    commit_with_message(commit_message)
 
 def update_issue(args):
     issue_filename = get_issue_filename(args.id)
@@ -90,8 +94,8 @@ def update_issue(args):
     with open(issue_filename, "at") as f:
         f.write(f"{args.field}: {value}\n")
     if args.commit:
-        run(f"git add '{issue_filename}'")
-        run(f"git commit -m '{args.id}: {args.field} -> {value}'")
+        commit_with_message(f"{args.id}: {args.field} -> {value}",
+                filename=issue_filename)
 
 @functools.cache
 def get_git_user():
@@ -103,8 +107,8 @@ def take_issue(args):
     with open(issue_filename, "at") as f:
         f.write(f"assignee: {user}\nstatus: {args.status}\n")
     if args.commit:
-        run(f"git add '{issue_filename}'")
-        run(f"git commit -m '{args.id}: taken by {user}'")
+        commit_with_message(f"{args.id}: taken by {user}",
+                filename=issue_filename)
 
 def issue_lines_no_meta(issue_filename):
     last_field = None
