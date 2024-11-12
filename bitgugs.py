@@ -8,7 +8,12 @@ def die(message):
     sys.stderr.write(message + "\n")
     sys.exit(1)
 
+def run(command):
+    print(">>>", command)
+    return os.system(command)
+
 def result(command):
+    print("?>>", command)
     return os.popen(command).readline().rstrip()
 
 def find_git_root():
@@ -58,10 +63,10 @@ def create_issue(args):
     with open(issue_filename, "at") as f:
         f.write(f"id: {identifier}\ntitle: {title}\nstatus: {args.status}\n")
         f.write("description: \n")
-    os.system("${EDITOR:-sensible-editor} +4 " + f"'{issue_filename}'")
+    run("${EDITOR:-sensible-editor} +4 " + f"'{issue_filename}'")
     if args.commit:
-        os.system(f"git add '{issue_filename}'")
-        os.system(f"git commit -m '{identifier}: {title} ({args.status})'")
+        run(f"git add '{issue_filename}'")
+        run(f"git commit -m '{identifier}: {title} ({args.status})'")
 
 def commit_to_issue(args):
     if args.commit:
@@ -73,11 +78,11 @@ def commit_to_issue(args):
         with open(issue_filename, "at") as f:
             f.write(f"commit: {message}\n")
             if args.status: f.write(f"status: {args.status}\n")
-        os.system(f"git add '{issue_filename}'")
+        run(f"git add '{issue_filename}'")
     message_id = ", ".join(issue_ids)
     commit_message = f"{message_id}: {message}"
     if args.status: commit_message += f" ({args.status})"
-    os.system(f"git commit -m '{commit_message}'")
+    run(f"git commit -m '{commit_message}'")
 
 def update_issue(args):
     issue_filename = get_issue_filename(args.id)
@@ -85,8 +90,8 @@ def update_issue(args):
     with open(issue_filename, "at") as f:
         f.write(f"{args.field}: {value}\n")
     if args.commit:
-        os.system(f"git add '{issue_filename}'")
-        os.system(f"git commit -m '{args.id}: {args.field} -> {value}'")
+        run(f"git add '{issue_filename}'")
+        run(f"git commit -m '{args.id}: {args.field} -> {value}'")
 
 @functools.cache
 def get_git_user():
@@ -98,8 +103,8 @@ def take_issue(args):
     with open(issue_filename, "at") as f:
         f.write(f"assignee: {user}\nstatus: {args.status}\n")
     if args.commit:
-        os.system(f"git add '{issue_filename}'")
-        os.system(f"git commit -m '{args.id}: taken by {user}'")
+        run(f"git add '{issue_filename}'")
+        run(f"git commit -m '{args.id}: taken by {user}'")
 
 def issue_lines_no_meta(issue_filename):
     last_field = None
@@ -232,11 +237,11 @@ if __name__ == "__main__":
     if not args.subcommand: cmd_parser.print_help()
     elif args.commit:
         stash_name = result("git stash create bitgugs temp stash")
-        os.system("git reset --hard HEAD")
+        run("git reset --hard HEAD")
         try:
             args.func(args)
         finally:
-            if os.system(f"git stash apply --index {stash_name}") != 0:
+            if run(f"git stash apply --index {stash_name}") != 0:
                 print("stash apply failed, but your changes are saved in",
                         stash_name)
     else: args.func(args)
