@@ -100,7 +100,7 @@ def field_match(value, search):
 def list_issues(args):
     issue_dir = ensure_issue_directory()
     issues = all_issues()
-    for issue in issues:
+    for issue in sorted(issues):
         fields = dict(issue_lines_no_meta(os.path.join(issue_dir, issue)))
         if not field_match(fields["status"]["value"], args.status): continue
         if (not field_match(fields["title"]["value"], args.search) and
