@@ -1,0 +1,6 @@
+id: 1010
+title: Pop stash only if it was created
+status: created
+description: Currently, --commit tries to save user's work with stash push/pop.
++: It fails e.g. when there are no changes to stash, so there is a danger of
++: popping something else than bitgugs' own stash.  Prevent this.
