@@ -1,0 +1,4 @@
+id: 1009
+title: Add show subcommand
+status: created
+description: A command for getting all information about an issue by id
