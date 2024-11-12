@@ -145,23 +145,20 @@ subcommands = cmd_parser.add_subparsers(dest="subcommand", required=True)
 
 newissue_parser = subcommands.add_parser("new", help="Create new issue")
 newissue_parser.set_defaults(func=create_issue)
-newissue_parser.add_argument("title",
-        type=str, nargs="+",
+newissue_parser.add_argument("title", nargs="+",
         help="A short (few words) description of the issue",
 )
 newissue_parser.add_argument("-i", "--id",
-        type=str,
         help="Identifier for new issue (default: pick next number)",
 )
 
 listissues_parser = subcommands.add_parser("list", help="List issues")
 listissues_parser.set_defaults(func=list_issues)
-listissues_parser.add_argument("search",
-        type=str, nargs="*",
+listissues_parser.add_argument("search", nargs="*",
         help="Words to look for in the issue (default: show all issues)",
 )
-listissues_parser.add_argument("-s", "--status",
-        type=str, nargs="+", default=["not", "closed"],
+listissues_parser.add_argument("-s", "--status", nargs="+",
+        default=["not", "closed"],
         help="List only issues of given status (default: not closed)",
 )
 listissues_parser.add_argument("-q", "--quiet",
@@ -172,15 +169,12 @@ listissues_parser.add_argument("-q", "--quiet",
 commit_parser = subcommands.add_parser("commit", help="Commit code to issue")
 commit_parser.set_defaults(func=commit_to_issue)
 commit_parser.add_argument("id",
-        type=str,
         help="Identifier for the issue you are assigning the changes to",
 )
-commit_parser.add_argument("message",
-        type=str, nargs="+",
+commit_parser.add_argument("message", nargs="+",
         help="Description of your changes",
 )
 commit_parser.add_argument("-s", "--status",
-        type=str,
         help="Also change issue status when commiting",
 )
 commit_parser.add_argument("-i", "--issues", nargs="+",
@@ -190,22 +184,18 @@ commit_parser.add_argument("-i", "--issues", nargs="+",
 update_parser = subcommands.add_parser("update", help="Update an issue")
 update_parser.set_defaults(func=update_issue)
 update_parser.add_argument("id",
-        type=str,
         help="Identifier for the issue you are making the changes to",
 )
 update_parser.add_argument("field",
-        type=str,
         help="Which field (title, status, description, links...) to update",
 )
-update_parser.add_argument("value",
-        type=str, nargs="+",
+update_parser.add_argument("value", nargs="+",
         help="New value for the field",
 )
 
 show_parser = subcommands.add_parser("show", help="Show issue by id")
 show_parser.set_defaults(func=show_issue)
 show_parser.add_argument("id",
-        type=str,
         help="Identifier for issue to show",
 )
 

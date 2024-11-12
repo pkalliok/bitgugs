@@ -5,3 +5,4 @@ description: A command for getting all information about an issue by id
 status: in-progress
 commit: first implementation of show
 status: closed
+commit: remove unnecessary type=str defs

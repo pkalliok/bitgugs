@@ -5,3 +5,4 @@ description: A command one can use to update issues
 status: open
 commit: initial implementation of update command
 status: closed
+commit: remove unnecessary type=str defs

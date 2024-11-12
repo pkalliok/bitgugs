@@ -5,3 +5,5 @@ description: Make the script for committing into specific issue(s)
 commit: implement commit subcommand
 status: closed
 commit: add warning of commit flag
+commit: remove unnecessary type=str defs
+commit: remove unnecessary type=str defs
