@@ -1,0 +1,5 @@
+id: 1012
+title: command for taking issues
+status: created
+description: Implement a "take" subcommand that is basically a combination of
++: updating assignee and state at the same time
