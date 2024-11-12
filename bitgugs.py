@@ -8,8 +8,11 @@ def die(message):
     sys.stderr.write(message + "\n")
     sys.exit(1)
 
+def result(command):
+    return os.popen(command).readline().rstrip()
+
 def find_git_root():
-    return os.popen("git rev-parse --show-toplevel").readline().rstrip()
+    return result("git rev-parse --show-toplevel")
 
 @functools.cache
 def ensure_issue_directory():
@@ -87,7 +90,7 @@ def update_issue(args):
 
 @functools.cache
 def get_git_user():
-    return os.popen("git config user.email").readline().rstrip()
+    return result("git config user.email")
 
 def take_issue(args):
     issue_filename = get_issue_filename(args.id)
@@ -228,11 +231,13 @@ if __name__ == "__main__":
     args = cmd_parser.parse_args()
     if not args.subcommand: cmd_parser.print_help()
     elif args.commit:
-        if os.system("git stash -m 'bitgugs stash for --commit'") != 0:
-            die("git stash was unsuccessful but needed for --commit")
+        stash_name = result("git stash create bitgugs temp stash")
+        os.system("git reset --hard HEAD")
         try:
             args.func(args)
         finally:
-            os.system("git stash pop")
+            if os.system(f"git stash apply --index {stash_name}") != 0:
+                print("stash apply failed, but your changes are saved in",
+                        stash_name)
     else: args.func(args)
 

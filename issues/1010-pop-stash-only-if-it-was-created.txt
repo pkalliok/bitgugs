@@ -6,3 +6,5 @@ description: Currently, --commit tries to save user's work with stash push/pop.
 +: popping something else than bitgugs' own stash.  Prevent this.
 assignee: panu.kalliokoski@sange.fi
 status: assigned
+commit: use stash create for handling stashes
+status: closed
