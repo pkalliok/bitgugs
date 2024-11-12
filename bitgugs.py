@@ -53,12 +53,12 @@ def create_issue(args):
     issue_filename = new_issue_filename(identifier, args.title)
     title = " ".join(args.title)
     with open(issue_filename, "at") as f:
-        f.write(f"id: {identifier}\ntitle: {title}\nstatus: created\n")
+        f.write(f"id: {identifier}\ntitle: {title}\nstatus: {args.status}\n")
         f.write("description: \n")
     os.system("${EDITOR:-sensible-editor} +4 " + f"'{issue_filename}'")
     if args.commit:
         os.system(f"git add '{issue_filename}'")
-        os.system(f"git commit -m '{identifier}: {title} (created)'")
+        os.system(f"git commit -m '{identifier}: {title} ({args.status})'")
 
 def commit_to_issue(args):
     if args.commit:
@@ -84,6 +84,19 @@ def update_issue(args):
     if args.commit:
         os.system(f"git add '{issue_filename}'")
         os.system(f"git commit -m '{args.id}: {args.field} -> {value}'")
+
+@functools.cache
+def get_git_user():
+    return os.popen("git config user.email").readline().rstrip()
+
+def take_issue(args):
+    issue_filename = get_issue_filename(args.id)
+    user = get_git_user()
+    with open(issue_filename, "at") as f:
+        f.write(f"assignee: {user}\nstatus: {args.status}\n")
+    if args.commit:
+        os.system(f"git add '{issue_filename}'")
+        os.system(f"git commit -m '{args.id}: taken by {user}'")
 
 def issue_lines_no_meta(issue_filename):
     last_field = None
@@ -151,6 +164,9 @@ newissue_parser.add_argument("title", nargs="+",
 newissue_parser.add_argument("-i", "--id",
         help="Identifier for new issue (default: pick next number)",
 )
+newissue_parser.add_argument("-s", "--status", default="created",
+        help="Which state to create the issue in (default created)",
+)
 
 listissues_parser = subcommands.add_parser("list", help="List issues")
 listissues_parser.set_defaults(func=list_issues)
@@ -197,6 +213,15 @@ show_parser = subcommands.add_parser("show", help="Show issue by id")
 show_parser.set_defaults(func=show_issue)
 show_parser.add_argument("id",
         help="Identifier for issue to show",
+)
+
+take_parser = subcommands.add_parser("take", help="Start work on an issue")
+take_parser.set_defaults(func=take_issue)
+take_parser.add_argument("id",
+        help="Identifier for issue to mark as being worked upon",
+)
+take_parser.add_argument("-s", "--status", default="assigned",
+        help="Which state to transition the issue to (default assigned)",
 )
 
 if __name__ == "__main__":

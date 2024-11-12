@@ -5,3 +5,5 @@ description: Implement a "take" subcommand that is basically a combination of
 +: updating assignee and state at the same time
 assignee: panu.kalliokoski@sange.fi
 status: assigned
+commit: implement take subcommand
+status: closed
