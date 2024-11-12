@@ -1,0 +1,5 @@
+id: 1014
+title: showing issues with history metadata
+status: created
+description: Add an option (default true) to show dates and authors of
++: issue changes.
