@@ -1,0 +1,6 @@
+id: 1013
+title: command for creating code reviews
+status: created
+description: Create a subcommand that saves a reference to given commits
++: for review.  Maybe also automatically show that diff when the review
++: issue is shown with the show subcommand.
