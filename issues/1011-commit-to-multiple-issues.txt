@@ -1,0 +1,5 @@
+id: 1011
+title: commit to multiple issues
+status: created
+description: A command line switch to use "commit" subcommand with
++: multiple issues at the same time
