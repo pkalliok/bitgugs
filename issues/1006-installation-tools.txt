@@ -1,0 +1,4 @@
+id: 1006
+title: installation tools
+status: created
+description: Make bitgugs installable system-wide; either packaging or Makefile
