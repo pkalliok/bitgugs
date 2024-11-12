@@ -61,6 +61,8 @@ def create_issue(args):
         os.system(f"git commit -m '{identifier}: {title} (created)'")
 
 def commit_to_issue(args):
+    if args.commit:
+        die("The --commit switch doesn't make sense for the commit command")
     issue_filename = get_issue_filename(args.id)
     message = " ".join(args.message)
     with open(issue_filename, "at") as f:
