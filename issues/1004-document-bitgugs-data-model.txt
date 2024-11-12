@@ -1,0 +1,5 @@
+id: 1004
+title: document bitgugs data model
+status: created
+description: Create proper documentation about how bitgugs stores information
++: and how it should be handled by 3rd party programs.
