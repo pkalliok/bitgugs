@@ -7,3 +7,4 @@ status: closed
 commit: add warning of commit flag
 commit: remove unnecessary type=str defs
 commit: remove unnecessary type=str defs
+comment: this command is unintuitive
