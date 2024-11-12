@@ -3,3 +3,5 @@ title: Add show subcommand
 status: created
 description: A command for getting all information about an issue by id
 status: in-progress
+commit: first implementation of show
+status: closed

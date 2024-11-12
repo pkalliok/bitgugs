@@ -108,6 +108,9 @@ def field_match(value, search):
         return not field_match(value, search[1:])
     return any((term in value) for term in search)
 
+def show_issue(args):
+    print(open(get_issue_filename(args.id)).read())
+
 def list_issues(args):
     issue_dir = ensure_issue_directory()
     issues = all_issues()
@@ -191,6 +194,13 @@ update_parser.add_argument("field",
 update_parser.add_argument("value",
         type=str, nargs="+",
         help="New value for the field",
+)
+
+show_parser = subcommands.add_parser("show", help="Show issue by id")
+show_parser.set_defaults(func=show_issue)
+show_parser.add_argument("id",
+        type=str,
+        help="Identifier for issue to show",
 )
 
 if __name__ == "__main__":
