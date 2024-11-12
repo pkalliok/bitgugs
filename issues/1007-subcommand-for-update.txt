@@ -2,3 +2,4 @@ id: 1007
 title: subcommand for update
 status: created
 description: A command one can use to update issues
+status: open
