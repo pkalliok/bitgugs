@@ -60,6 +60,17 @@ def create_issue(args):
         os.system(f"git add '{issue_filename}'")
         os.system(f"git commit -m '{identifier}: {title} (created)'")
 
+def commit_to_issue(args):
+    issue_filename = get_issue_filename(args.id)
+    message = " ".join(args.message)
+    with open(issue_filename, "at") as f:
+        f.write(f"commit: {message}\n")
+        if args.status: f.write(f"status: {args.status}\n")
+    os.system(f"git add '{issue_filename}'")
+    commit_message = f"{args.id}: {message}"
+    if args.status: commit_message += f" ({args.status})"
+    os.system(f"git commit -m '{commit_message}'")
+
 def issue_lines_no_meta(issue_filename):
     last_field = None
     last_field_value = ""
@@ -104,6 +115,7 @@ def list_issues(args):
                 print(field, ":", fields[field]["value"])
             print()
 
+
 cmd_parser = ArgumentParser(
         prog="bitgugs",
         description="Git-based issue tracker",
@@ -138,6 +150,21 @@ listissues_parser.add_argument("-s", "--status",
 listissues_parser.add_argument("-q", "--quiet",
         action="store_true",
         help="Show only issue titles, not contents"
+)
+
+commit_parser = subcommands.add_parser("commit", help="Commit code to issue")
+commit_parser.set_defaults(func=commit_to_issue)
+commit_parser.add_argument("id",
+        type=str,
+        help="Identifier for the issue you are assigning the changes to",
+)
+commit_parser.add_argument("message",
+        type=str, nargs="+",
+        help="Description of your changes",
+)
+commit_parser.add_argument("-s", "--status",
+        type=str,
+        help="Also change issue status when commiting",
 )
 
 if __name__ == "__main__":

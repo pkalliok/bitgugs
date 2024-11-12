@@ -2,3 +2,5 @@ id: 1005
 title: bitgugs commit
 status: created
 description: Make the script for committing into specific issue(s)
+commit: implement commit subcommand
+status: closed
