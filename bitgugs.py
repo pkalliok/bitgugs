@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys, os, glob
-import functools, re
+import functools, re, time
 from argparse import ArgumentParser
 
 def die(message):
@@ -123,6 +123,20 @@ def issue_lines_no_meta(issue_filename):
             last_field = field
             last_field_value = value
 
+def issue_lines_with_meta(issue_filename):
+    author, instant = None, None
+    with os.popen(f"git blame -p '{issue_filename}'") as f:
+        for line in f:
+            author_match = re.match(r"author-mail <([^>\r\t ]*)>", line)
+            if author_match: author = author_match.group(1)
+            time_match = re.match(r"author-time ([0-9]+)", line)
+            if time_match: instant = int(time_match.group(1))
+            if line.startswith("\t"):
+                field, value = line.strip().split(": ", 1)
+                yield field, dict(
+                    field=field, value=value, author=author, instant=instant
+                )
+
 def field_match(value, search):
     if not search: return True
     if not isinstance(search, list): return field_match(value, [search])
@@ -137,7 +151,18 @@ def field_match(value, search):
     return any((term in value) for term in search)
 
 def show_issue(args):
-    print(open(get_issue_filename(args.id)).read())
+    if args.meta:
+        old_meta = None
+        for f, line in issue_lines_with_meta(get_issue_filename(args.id)):
+            new_meta = (line["instant"], line["author"])
+            if old_meta != new_meta:
+                line["time"] = time.strftime("%F %H:%m",
+                        time.gmtime(line["instant"]))
+                print("\n{author} ({time}):".format(**line))
+                old_meta = new_meta
+            print(" {field}: {value}".format(**line))
+    else:
+        print(open(get_issue_filename(args.id)).read())
 
 def list_issues(args):
     issue_dir = ensure_issue_directory()
@@ -162,8 +187,7 @@ cmd_parser = ArgumentParser(
         prog="bitgugs",
         description="Git-based issue tracker",
 )
-cmd_parser.add_argument("-c", "--commit",
-        action="store_true",
+cmd_parser.add_argument("-c", "--commit", action="store_true",
         help="Commit issue changes immediately",
 )
 subcommands = cmd_parser.add_subparsers(dest="subcommand", required=True)
@@ -189,8 +213,7 @@ listissues_parser.add_argument("-s", "--status", nargs="+",
         default=["not", "closed"],
         help="List only issues of given status (default: not closed)",
 )
-listissues_parser.add_argument("-q", "--quiet",
-        action="store_true",
+listissues_parser.add_argument("-q", "--quiet", action="store_true",
         help="Show only issue titles, not contents"
 )
 
@@ -225,6 +248,9 @@ show_parser = subcommands.add_parser("show", help="Show issue by id")
 show_parser.set_defaults(func=show_issue)
 show_parser.add_argument("id",
         help="Identifier for issue to show",
+)
+show_parser.add_argument("-m", "--meta", action="store_true",
+        help="Also show who made the update and when",
 )
 
 take_parser = subcommands.add_parser("take", help="Start work on an issue")

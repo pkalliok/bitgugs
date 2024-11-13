@@ -5,3 +5,5 @@ description: Add an option (default true) to show dates and authors of
 +: issue changes.
 assignee: panu.kalliokoski@sange.fi
 status: assigned
+commit: implement meta switch to show command
+status: closed
