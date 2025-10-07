@@ -1,0 +1,4 @@
+id: 1016
+title: usage cheat sheet
+status: created
+description: Document the normal workflow in bitgugs, along with variations
