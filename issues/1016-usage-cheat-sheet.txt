@@ -4,3 +4,4 @@ status: created
 description: Document the normal workflow in bitgugs, along with variations
 assignee: panu.kalliokoski@sange.fi
 status: assigned
+commit: document for most common workflows

@@ -31,3 +31,8 @@ following features:
   as they want.  As Bitgugs' point is to have the issues describe
   accurately what's up with a particular version of the code, the issues
   use the same branching as does the code.
+
+Documentation
+-------------
+
+Not much yet, but take a look at [usual workflows](./docs/workflow.md).
