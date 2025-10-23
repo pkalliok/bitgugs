@@ -8,7 +8,7 @@ MANPAGES=$(SCRIPTS:.py=.1)
 DOCS=README.md $(wildcard docs/*) LICENSE-CC0-1.0.md
 INSTALL=install -c
 
-.PHONY: all install
+.PHONY: all install clean
 all: bitgugs.1
 
 stamps/build-deps: Makefile
@@ -27,3 +27,5 @@ install: all
 	$(INSTALL) -m 644 $(MANPAGES) $(MANDIR)
 	$(INSTALL) -m 644 $(DOCS) $(DOCDIR)
 
+clean:
+	-rm -r $(MANPAGES) __pycache__

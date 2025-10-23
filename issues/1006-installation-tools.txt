@@ -5,3 +5,4 @@ description: Make bitgugs installable system-wide; either packaging or Makefile
 commit: make all and install targets
 status: closed
 comment: installs by default to /usr/local.  Packaging left to later issues.
+commit: clean rule
