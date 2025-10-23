@@ -185,7 +185,8 @@ def list_issues(args):
 
 cmd_parser = ArgumentParser(
         prog="bitgugs",
-        description="Git-based issue tracker",
+        description="""Git-based issue tracker.
+          See https://github.com/pkalliok/bitgugs for documentation.""",
 )
 cmd_parser.add_argument("-c", "--commit", action="store_true",
         help="Commit issue changes immediately",
@@ -261,6 +262,8 @@ take_parser.add_argument("id",
 take_parser.add_argument("-s", "--status", default="assigned",
         help="Which state to transition the issue to (default assigned)",
 )
+
+get_parser = lambda: cmd_parser
 
 if __name__ == "__main__":
     args = cmd_parser.parse_args()

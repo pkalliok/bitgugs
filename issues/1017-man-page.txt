@@ -2,3 +2,5 @@ id: 1017
 title: man page
 status: created
 description: Write or (preferably) automatically create a man page for Bitgugs.
+commit: automation for creating manpage
+status: closed
