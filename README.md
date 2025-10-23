@@ -32,6 +32,23 @@ following features:
   accurately what's up with a particular version of the code, the issues
   use the same branching as does the code.
 
+Installation
+------------
+
+Do this:
+```
+make
+sudo make install
+```
+
+If you want to install somewhere else than `/usr/local`,  use something
+like:
+
+```
+make
+sudo make install PREFIX=/usr
+```
+
 Documentation
 -------------
 

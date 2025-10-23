@@ -6,3 +6,4 @@ assignee: panu.kalliokoski@sange.fi
 status: assigned
 commit: document for most common workflows
 commit: recommendations of branching and stati
+commit: installation instructions
